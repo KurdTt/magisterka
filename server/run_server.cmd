@@ -1,0 +1,1 @@
+java -jar build/libs/spark-com.server-1.0.0.jar

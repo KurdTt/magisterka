@@ -1,0 +1,61 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "24.0.2"
+    defaultConfig {
+        applicationId "com.weatherclient"
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    //Support Design
+    //Butter Knife
+    //Retrofit
+    //JSON Utils
+    //Dagger 2
+    //Android Plot
+    //Apache Commons
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+    //RxJava
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:design:23.4.0'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.google.code.gson:gson:2.5'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.google.dagger:dagger:2.9'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
+    compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:support-vector-drawable:23.4.0'
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
+    provided 'javax.annotation:jsr250-api:1.0'
+}

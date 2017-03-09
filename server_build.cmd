@@ -1,0 +1,1 @@
+gradle :server:clean :server:build

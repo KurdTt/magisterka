@@ -1,0 +1,1 @@
+gradle :client:assemble
