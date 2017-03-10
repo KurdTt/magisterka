@@ -9,4 +9,9 @@
         android:singleLine="true"
         android:title="@string/settingsUrlDescription" />
 
+    <SwitchPreference
+        android:title="@string/settingsTestData"
+        android:defaultValue="false"
+        android:key="testValues" />
+
 </PreferenceScreen>

@@ -1,11 +1,22 @@
 <resources>
-    <string name="app_name">Weather Client</string>
+    <string name="appName">Weather Client</string>
     <!-- Menu -->
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="settingsTitle">Settings</string>
 
     <!-- Strings related to Settings -->
-   <string name="settingsUrlDescription">Server URL</string>
+    <string name="settingsUrlDescription">Server URL</string>
+    <string name="settingsTestData">Enable test data?</string>
 
+    <!-- Weather -->
+    <string name="temperature">Temperature</string>
+    <string name="pressure">Pressure</string>
+    <string name="pollination">Pollination</string>
+
+    <!-- Utils -->
+    <string name="noDataLoaded">Click refresh icon in upper right corner to download data to charts</string>
+    <string name="noInternetConnection">Cannot download data, no internet connection</string>
+    <string name="connectionError">Error: Cannot download data from %1$s</string>
+    <string name="pleaseWait">Please wait…</string>
 </resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Menu -->
+    <string name="settingsTitle">Ustawienia</string>
+
+    <!-- Strings related to Settings -->
+    <string name="settingsUrlDescription">Adres serwera</string>
+    <string name="settingsTestData">Czy włączyć dane testowe?</string>
+
+    <!-- Weather -->
+    <string name="temperature">Temperatura</string>
+    <string name="pressure">Ciśnienie</string>
+    <string name="pollination">Zapylenie</string>
+
+    <!-- Utils -->
+    <string name="noDataLoaded">Naciśnij ikonkę odświeżania w prawym górnym rogu, aby pobrać dane do wykresów</string>
+    <string name="noInternetConnection">Nie można ściągnąć danych, brak połączenia z internetem</string>
+    <string name="connectionError">Błąd: Nie można się połączyć się z %1$s</string>
+    <string name="pleaseWait">Proszę czekać…</string>
+</resources>

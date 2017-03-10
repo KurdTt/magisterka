@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.SwitchPreference;
 
 import com.weatherclient.R;
 import com.weatherclient.android.application.WeatherSystemApplication;
@@ -12,6 +13,7 @@ import com.weatherclient.android.preferences.model.SettingsPreferences;
 
 import javax.inject.Inject;
 
+import static com.weatherclient.android.preferences.model.SettingsPreferences.TEST_VALUES;
 import static com.weatherclient.android.preferences.model.SettingsPreferences.URL_KEY;
 
 /**
@@ -33,6 +35,7 @@ public class GeneralPreferenceFragment extends PreferenceFragment {
         setHasOptionsMenu(true);
 
         bindPreferenceSummaryToValue(findPreference(URL_KEY));
+        bindPreferenceSummaryToValue(findPreference(TEST_VALUES));
     }
 
     private void inject() {
@@ -46,15 +49,26 @@ public class GeneralPreferenceFragment extends PreferenceFragment {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
-            preference.setSummary(stringValue);
-            settingsPreferences.setString(preference.getKey(), stringValue);
+            if (preference instanceof SwitchPreference) {
+                boolean booleanValue = Boolean.valueOf(stringValue);
+                settingsPreferences.setBoolean(preference.getKey(), booleanValue);
+            } else {
+                preference.setSummary(stringValue);
+                settingsPreferences.setString(preference.getKey(), stringValue);
+            }
+
             return true;
         }
     };
 
     private void bindPreferenceSummaryToValue(Preference preference) {
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                settingsPreferences.getString(preference.getKey()));
+        setSummary(preference);
+    }
+
+    private void setSummary(Preference preference) {
+        if (!(preference instanceof SwitchPreference))
+            sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                    settingsPreferences.getString(preference.getKey()));
     }
 }

@@ -1,12 +1,12 @@
 package com.weatherclient.android.main.view;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.weatherclient.R;
 import com.weatherclient.android.activity.BaseActivity;
+import com.weatherclient.android.chart.ChartColors;
 import com.weatherclient.android.chart.WeatherChartFactory;
 import com.weatherclient.android.main.presenter.MainActivityPresenter;
 import com.weatherclient.android.model.WeatherParameter;
@@ -22,7 +23,6 @@ import com.weatherclient.android.preferences.view.SettingsActivity;
 import com.weatherclient.di.component.DaggerMainActivityComponent;
 import com.weatherclient.di.module.MainActivityModule;
 import com.weatherclient.utils.ArrayUtils;
-import com.weatherclient.utils.BindUtils;
 
 import java.util.List;
 
@@ -36,8 +36,6 @@ public class MainActivity extends BaseActivity
     @Inject
     MainActivityPresenter presenter;
 
-    @BindView(R.id.testText)
-    TextView testText;
     @BindView(R.id.chartPanel)
     LinearLayout chartPanel;
     @BindView(R.id.toolbar)
@@ -52,6 +50,7 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setActionBar();
+        noDataFound();
     }
 
     private void setActionBar() {
@@ -89,8 +88,6 @@ public class MainActivity extends BaseActivity
 
         if (id == R.id.nav_settings) {
             openActivity(SettingsActivity.class);
-        } else if (id == R.id.nav_exit) {
-            finish();
         }
 
         drawer.closeDrawer(GravityCompat.START);
@@ -98,19 +95,29 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void setCharts(List<WeatherParameter> wpList) {
-        chartPanel.removeAllViews();
+    public void onDataLoaded(List<WeatherParameter> wpList) {
+        clearCharts();
+
         WeatherChartFactory.createChart(chartPanel,
-                ArrayUtils.getTemperatureList(wpList), "Temperatura", Color.BLUE);
+                ArrayUtils.getTemperatureList(wpList), getString(R.string.temperature), ChartColors.TEMPERATURE_COLOR);
         WeatherChartFactory.createChart(chartPanel,
-                ArrayUtils.getPressureList(wpList), "Ciśnienie", Color.GREEN);
+                ArrayUtils.getPressureList(wpList), getString(R.string.pressure), ChartColors.PRESSURE_COLOR);
         WeatherChartFactory.createChart(chartPanel,
-                ArrayUtils.getPollinationList(wpList), "Zapylenie", Color.RED);
+                ArrayUtils.getPollinationList(wpList), getString(R.string.pollination), ChartColors.POLLINATION_COLOR);
     }
 
     @Override
-    public void setText(String text) {
-        BindUtils.bindString(text, testText);
+    public void clearCharts() {
+        chartPanel.removeAllViews();
+    }
+
+    @Override
+    public void noDataFound() {
+        clearCharts();
+        TextView textView = new TextView(this);
+        textView.setGravity(Gravity.CENTER);
+        textView.setText(R.string.noDataLoaded);
+        chartPanel.addView(textView);
     }
 
     @Override
