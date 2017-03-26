@@ -12,6 +12,10 @@ import java.util.Random;
 
 public class WeatherParameterGenerator {
 
+    private static final String[] NAMES = {
+        "Piwnica", "Poddasze", "Ogród", "Kuchnia", "Pokój", "Łazienka"
+    };
+
     private static WeatherParameterGenerator instance = null;
     private static final Random random = new Random();
 
@@ -23,6 +27,16 @@ public class WeatherParameterGenerator {
             instance = new WeatherParameterGenerator();
         }
         return instance;
+    }
+
+    public List<List<WeatherParameter>> generate(int count){
+        List<List<WeatherParameter>> result = new ArrayList<>();
+
+        for (String name : NAMES) {
+            result.add(generate(name, count));
+        }
+
+        return result;
     }
 
     public List<WeatherParameter> generate(String deviceName, int count) {

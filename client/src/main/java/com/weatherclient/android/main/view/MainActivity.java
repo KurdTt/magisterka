@@ -1,28 +1,34 @@
 package com.weatherclient.android.main.view;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.View;
 
 import com.weatherclient.R;
 import com.weatherclient.android.activity.BaseActivity;
-import com.weatherclient.android.chart.ChartColors;
-import com.weatherclient.android.chart.WeatherChartFactory;
+import com.weatherclient.android.chart.view.ChartAdapter;
+import com.weatherclient.android.chart.view.ChartFragment;
+import com.weatherclient.android.chart.view.EmptyViewAdapter;
 import com.weatherclient.android.main.presenter.MainActivityPresenter;
 import com.weatherclient.android.model.WeatherParameter;
 import com.weatherclient.android.preferences.view.SettingsActivity;
 import com.weatherclient.di.component.DaggerMainActivityComponent;
 import com.weatherclient.di.module.MainActivityModule;
-import com.weatherclient.utils.ArrayUtils;
+import com.weatherclient.utils.widgets.IClearableAdapter;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -36,14 +42,19 @@ public class MainActivity extends BaseActivity
     @Inject
     MainActivityPresenter presenter;
 
-    @BindView(R.id.chartPanel)
-    LinearLayout chartPanel;
+    @BindView(R.id.content)
+    ViewPager content;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+    @BindView(R.id.tab_layout)
+    TabLayout tabLayout;
+
+    private ChartAdapter chartAdapter = new ChartAdapter(getSupportFragmentManager());
+    private int actionBarHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +62,57 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         setActionBar();
         noDataFound();
+        setListeners();
+        actionBarHeight = getActionBarHeight();
+    }
+
+    private void setListeners() {
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                content.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        tabLayout.setupWithViewPager(content);
+    }
+
+    private void setTabs(int visibility) {
+        if(tabLayout.getVisibility() != visibility) {
+            tabLayout.setVisibility(visibility);
+            if (visibility == View.VISIBLE) {
+                content.setPadding(content.getPaddingLeft(), content.getPaddingTop() + actionBarHeight, content.getPaddingRight(), content.getPaddingBottom());
+            } else {
+                content.setPadding(content.getPaddingLeft(), content.getPaddingTop() - actionBarHeight, content.getPaddingRight(), content.getPaddingBottom());
+            }
+        }
+    }
+
+    private int getActionBarHeight() {
+        int actionBarHeight = 0;
+        if(getSupportActionBar() != null) {
+            actionBarHeight = getSupportActionBar().getHeight();
+            if (actionBarHeight != 0)
+                return actionBarHeight;
+        }
+        final TypedValue tv = new TypedValue();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+                actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        } else if (getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
+        return actionBarHeight;
     }
 
     private void setActionBar() {
@@ -95,30 +157,50 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onDataLoaded(List<WeatherParameter> wpList) {
+    public void onDataLoaded(List<List<WeatherParameter>> result) {
         clearCharts();
 
-        WeatherChartFactory.createChart(chartPanel,
-                ArrayUtils.getTemperatureList(wpList), getString(R.string.temperature), ChartColors.TEMPERATURE_COLOR);
-        WeatherChartFactory.createChart(chartPanel,
-                ArrayUtils.getPressureList(wpList), getString(R.string.pressure), ChartColors.PRESSURE_COLOR);
-        WeatherChartFactory.createChart(chartPanel,
-                ArrayUtils.getPollinationList(wpList), getString(R.string.pollination), ChartColors.POLLINATION_COLOR);
+        setTabs(View.VISIBLE);
+
+        for (List<WeatherParameter> wpList : result) {
+            ChartFragment fragment = ChartFragment.newInstance(wpList);
+            chartAdapter.addFragment(fragment);
+            tabLayout.addTab(tabLayout.newTab().setText(getTabTitle(wpList)));
+        }
+        content.setAdapter(chartAdapter);
+    }
+
+    private String getTabTitle(List<WeatherParameter> wpList) {
+        if(wpList.size() > 0) {
+            return wpList.get(0).getDeviceName();
+        } else {
+            return StringUtils.EMPTY;
+        }
     }
 
     @Override
     public void clearCharts() {
-        chartPanel.removeAllViews();
+        content.removeAllViews();
+
+        PagerAdapter adapter = content.getAdapter();
+
+        if (adapter != null) {
+            if (adapter instanceof IClearableAdapter) {
+                ((IClearableAdapter) adapter).clear();
+            }
+        }
+
+        tabLayout.removeAllTabs();
+        content.setAdapter(null);
     }
 
     @Override
     public void noDataFound() {
         clearCharts();
-        TextView textView = new TextView(this);
-        textView.setGravity(Gravity.CENTER);
-        textView.setText(R.string.noDataLoaded);
-        chartPanel.addView(textView);
+        setTabs(View.GONE);
+        content.setAdapter(new EmptyViewAdapter(getSupportFragmentManager()));
     }
+
 
     @Override
     protected void inject() {

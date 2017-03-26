@@ -3,6 +3,7 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'war'
 
 repositories {
     mavenCentral()
@@ -24,12 +25,10 @@ jar {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile "com.sparkjava:spark-core:2.5.4"
     compile 'org.springframework.data:spring-data-mongodb:1.9.6.RELEASE'
     compile("org.springframework.boot:spring-boot-starter-web") {
-        exclude module: "spring-boot-starter-tomcat"
+        exclude module: 'org.springframework.boot:spring-boot-starter-logging'
     }
-    compile("org.springframework.boot:spring-boot-starter-jetty")
-    compile("org.springframework.boot:spring-boot-starter-actuator")
+    providedRuntime 'org.apache.tomcat.embed:tomcat-embed-jasper'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
 }

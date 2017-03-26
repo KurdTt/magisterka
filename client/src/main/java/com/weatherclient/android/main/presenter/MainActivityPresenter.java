@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 
 import com.weatherclient.R;
 import com.weatherclient.android.application.WeatherSystemApplication;
+import com.weatherclient.android.main.view.MainActivity;
 import com.weatherclient.android.main.view.MainView;
 import com.weatherclient.android.model.WeatherParameter;
 import com.weatherclient.android.model.generator.WeatherParameterGenerator;
@@ -43,7 +44,7 @@ public class MainActivityPresenter {
 
     private final MainView activity;
 
-    public MainActivityPresenter(MainView activity) {
+    public MainActivityPresenter(MainActivity activity) {
         this.activity = activity;
         inject();
     }
@@ -66,9 +67,9 @@ public class MainActivityPresenter {
             downloadTask.perform(activity.getContext());
     }
 
-    private void createTestValues(){
+    private void createTestValues() {
         WeatherParameterGenerator generator = WeatherParameterGenerator.getInstance();
-        Observable.just(generator.generate("test", 100))
+        Observable.just(generator.generate(100))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
@@ -91,7 +92,7 @@ public class MainActivityPresenter {
         }
     }
 
-    private final class DataCreatorObserver implements Observer<List<WeatherParameter>> {
+    private final class DataCreatorObserver implements Observer<List<List<WeatherParameter>>> {
         private ProgressDialog progressDialog;
 
         @Override
@@ -101,7 +102,7 @@ public class MainActivityPresenter {
         }
 
         @Override
-        public void onNext(List<WeatherParameter> value) {
+        public void onNext(List<List<WeatherParameter>> value) {
             activity.onDataLoaded(value);
         }
 

@@ -1,4 +1,4 @@
-package com.weatherclient.android.chart;
+package com.weatherclient.android.chart.utils;
 
 import android.util.DisplayMetrics;
 import android.view.Gravity;

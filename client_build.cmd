@@ -1,1 +1,1 @@
-gradle :client:assemble
+gradle :client:clean :client:assemble

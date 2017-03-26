@@ -62,13 +62,14 @@ public class GeneralPreferenceFragment extends PreferenceFragment {
     };
 
     private void bindPreferenceSummaryToValue(Preference preference) {
-        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
         setSummary(preference);
+        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
     }
 
     private void setSummary(Preference preference) {
-        if (!(preference instanceof SwitchPreference))
+        if (!(preference instanceof SwitchPreference)) {
             sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
                     settingsPreferences.getString(preference.getKey()));
+        }
     }
 }

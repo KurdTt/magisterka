@@ -12,9 +12,9 @@ import java.util.List;
 
 public interface MainView extends IContext {
 
-    void onDataLoaded(List<WeatherParameter> wpList);
-
-    void clearCharts();
+    void onDataLoaded(List<List<WeatherParameter>> wpList);
 
     void noDataFound();
+
+    void clearCharts();
 }

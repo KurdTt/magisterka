@@ -15,7 +15,7 @@ public class SettingsPreferences {
     public static final String URL_KEY = "serverUrl";
     public static final String TEST_VALUES = "testValues";
 
-    private static final String URL_DEFAULT_VALUE = "http://10.10.61.19:9999";
+    private static final String URL_DEFAULT_VALUE = "http://192.168.1.1:9999";
 
     private final SharedPreferences preferences;
     private final Editor prefsEditor;
@@ -35,6 +35,9 @@ public class SettingsPreferences {
     }
 
     public String getString(String key) {
+        if(key.equals(URL_KEY)){
+            return getUrl();
+        }
         return preferences.getString(key, StringUtils.EMPTY);
     }
 

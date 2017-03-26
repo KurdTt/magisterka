@@ -34,7 +34,7 @@
     <bean id="scheduledTimerTask" class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
         <!-- uruchamiany co sekunde -->
         <property name="period" value="1000"></property>
-        <property name="taskRunnable" ref="testTimerTask"></property>
+        <property name="runnable" ref="testTimerTask"></property>
     </bean>
 
     <bean class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">

@@ -1,6 +1,9 @@
 package com.weatherclient.android.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 /**
@@ -8,7 +11,7 @@ import java.util.Date;
  on 2016-12-15.
  */
 
-public class WeatherParameter {
+public class WeatherParameter implements Parcelable {
 
     private String id;
     private String deviceName;
@@ -79,4 +82,41 @@ public class WeatherParameter {
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.deviceName);
+        dest.writeValue(this.temperature);
+        dest.writeValue(this.pressure);
+        dest.writeValue(this.pollination);
+        dest.writeLong(this.timestamp != null ? this.timestamp.getTime() : -1);
+    }
+
+    protected WeatherParameter(Parcel in) {
+        this.id = in.readString();
+        this.deviceName = in.readString();
+        this.temperature = (Double) in.readValue(Double.class.getClassLoader());
+        this.pressure = (Double) in.readValue(Double.class.getClassLoader());
+        this.pollination = (Double) in.readValue(Double.class.getClassLoader());
+        long tmpTimestamp = in.readLong();
+        this.timestamp = tmpTimestamp == -1 ? null : new Date(tmpTimestamp);
+    }
+
+    public static final Parcelable.Creator<WeatherParameter> CREATOR = new Parcelable.Creator<WeatherParameter>() {
+        @Override
+        public WeatherParameter createFromParcel(Parcel source) {
+            return new WeatherParameter(source);
+        }
+
+        @Override
+        public WeatherParameter[] newArray(int size) {
+            return new WeatherParameter[size];
+        }
+    };
 }

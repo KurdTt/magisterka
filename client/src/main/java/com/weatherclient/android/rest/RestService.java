@@ -14,5 +14,5 @@ import retrofit2.http.GET;
 public interface RestService {
 
     @GET("/send")
-    Observable<List<WeatherParameter>> getWeatherParameters();
+    Observable<List<List<WeatherParameter>>> getWeatherParameters();
 }

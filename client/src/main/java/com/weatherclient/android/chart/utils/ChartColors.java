@@ -1,4 +1,4 @@
-package com.weatherclient.android.chart;
+package com.weatherclient.android.chart.utils;
 
 import android.graphics.Color;
 

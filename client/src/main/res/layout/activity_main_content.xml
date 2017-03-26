@@ -1,5 +1,6 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,19 +9,19 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="?attr/actionBarSize"
-    android:fillViewport="true"
     tools:context=".android.main.view.MainActivity"
     tools:showIn="@layout/activity_main_action_bar">
 
-        <LinearLayout
-            android:id="@+id/chartPanel"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:animateLayoutChanges="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </LinearLayout>
+        </android.support.v4.view.ViewPager>
 
-</ScrollView>
+</LinearLayout>

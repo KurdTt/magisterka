@@ -15,7 +15,12 @@ public class JsonUtils {
         return gson.toJson(weatherParameter);
     }
 
-    public static String toJson(List<WeatherParameter> list) {
+    /*public static String toJson(List<WeatherParameter> list) {
+        return gson.toJson(list);
+    }
+    */
+
+    public static String toJson(List<List<WeatherParameter>> list) {
         return gson.toJson(list);
     }
 }
